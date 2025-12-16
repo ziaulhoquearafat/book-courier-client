@@ -9,6 +9,10 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
+  const handleRegistration = (data) => {
+    console.log(data);
+  };
+
   return (
     <div className="bg-white max-w-4xl flex items-center mx-auto md:min-h-screen p-4">
       <div className="grid md:grid-cols-3 items-center [box-shadow:0_2px_10px_-3px_rgba(14,14,14,0.3)] rounded-xl overflow-hidden">
@@ -28,7 +32,10 @@ const Register = () => {
             </p>
           </div>
         </div>
-        <form className="md:col-span-2 w-full py-6 px-6 sm:px-14 max-w-lg mx-auto">
+        <form
+          onSubmit={handleSubmit(handleRegistration)}
+          className="md:col-span-2 w-full py-6 px-6 sm:px-14 max-w-lg mx-auto"
+        >
           <div className="mb-8">
             <h1 className="text-primary text-2xl font-bold">Register Now</h1>
           </div>

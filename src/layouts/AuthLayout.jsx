@@ -4,7 +4,9 @@ import Logo from "../components/Logo/Logo";
 const AuthLayout = () => {
   return (
     <div>
-      <Logo />
+      <div className="max-w-7xl mx-auto">
+        <Logo />
+      </div>
       <div>
         <Outlet />
       </div>
