@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import { imageUploadCloudinary } from "../../../utils";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Register = () => {
@@ -10,14 +11,35 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const { registerUser } = useAuth();
+  const { registerUser, updateUserProfile } = useAuth();
 
-  const handleRegistration = (data) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  console.log("in register", location);
+
+  const handleRegistration = async (data) => {
     console.log(data);
+
+    const imageFile = data.photo[0];
+    const imageURL = await imageUploadCloudinary(imageFile);
+
     registerUser(data.email, data.password)
       .then((result) => {
         console.log(result.user);
-        // update use profile
+
+        const userProfile = {
+          displayName: data.name,
+          photoURL: imageURL,
+        };
+        // update user profile
+        updateUserProfile(userProfile)
+          .then(() => {
+            console.log("user profile update successfully");
+            navigate(location?.state || "/");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
       })
       .catch((error) => {
         console.log(error.message);
