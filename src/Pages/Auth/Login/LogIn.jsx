@@ -1,12 +1,26 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import useAuth from "../../../hooks/useAuth";
 
 const LogIn = () => {
+  const { loginUser } = useAuth();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const handleLogin = (data) => {
+    console.log(data);
+    loginUser(data.email, data.password)
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
   return (
     <div>
@@ -27,7 +41,10 @@ const LogIn = () => {
               </p>
             </div>
           </div>
-          <form className="md:col-span-2 w-full py-6 px-6 sm:px-14 max-w-lg mx-auto">
+          <form
+            onSubmit={handleSubmit(handleLogin)}
+            className="md:col-span-2 w-full py-6 px-6 sm:px-14 max-w-lg mx-auto"
+          >
             <div className="mb-8">
               <h1 className="text-primary text-2xl font-bold">Login Now</h1>
             </div>
@@ -111,10 +128,7 @@ const LogIn = () => {
               </div>
             </div>
             <div className="mt-8">
-              <button
-                className="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white bg-primary hover:bg-secondary focus:outline-none cursor-pointer"
-                type="button"
-              >
+              <button className="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white bg-primary hover:bg-secondary focus:outline-none cursor-pointer">
                 Log In
               </button>
             </div>
