@@ -17,6 +17,7 @@ const Register = () => {
     registerUser(data.email, data.password)
       .then((result) => {
         console.log(result.user);
+        // update use profile
       })
       .catch((error) => {
         console.log(error.message);
