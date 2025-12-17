@@ -7,8 +7,8 @@ import AllBooks from "../Pages/AllBooks/AllBooks";
 import LogIn from "../Pages/Auth/Login/Login";
 import Register from "../Pages/Auth/Register/Register";
 import ContactUs from "../Pages/ContactUs/ContactUs";
+import AddBooks from "../Pages/Dashboard/Librarian/AddBooks";
 import Home from "../Pages/Home/Home/Home";
-import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -49,10 +49,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: (
-      <PrivateRoute>
-        <DashboardLayout></DashboardLayout>
-      </PrivateRoute>
-    ),
+    element: <DashboardLayout></DashboardLayout>,
+    children: [
+      {
+        path: "add-books",
+        element: <AddBooks />,
+      },
+    ],
   },
 ]);

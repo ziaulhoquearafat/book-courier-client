@@ -1,7 +1,9 @@
+import AddBookForm from "../../../components/Dashboard/Form/AddBookForm";
+
 const AddBooks = () => {
   return (
     <div>
-      <h1>Add Books</h1>
+      <AddBookForm />
     </div>
   );
 };
