@@ -100,7 +100,7 @@ const DashboardLayout = () => {
           <div className="flex-1 px-2 mx-2">
             {!isSidebarOpen && (
               <div className="hidden lg:block">
-                <Logo className="w-10" />
+                <Logo className="w-20" />
               </div>
             )}
             <div className="lg:hidden">
@@ -110,7 +110,7 @@ const DashboardLayout = () => {
         </div>
 
         {/* Main Content Area with Gradient */}
-        <div className="p-6 md:p-10 flex-1 h-full min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300/50">
+        <div className="p-6 md:p-10 flex-1 h-full min-h-screen bg-gradient-to-br from-base-100 via-indigo-50/30 to-blue-50/30">
           <Outlet />
         </div>
       </div>
@@ -123,46 +123,41 @@ const DashboardLayout = () => {
           className="drawer-overlay"
         ></label>
         <div
-          className={`menu p-4 min-h-full bg-base-100 border-r border-base-200 text-base-content flex flex-col transition-all duration-300 ease-in-out ${
-            isSidebarOpen ? "w-72" : "w-20"
-          }`}
+          className={`menu p-4 min-h-full bg-base-100 border-r border-base-200 text-base-content flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-72" : "w-20"
+            }`}
         >
           {/* Sidebar Logo */}
-          <div
-            className={`mb-8 flex transition-all duration-300 ${
-              isSidebarOpen ? "justify-start pl-2" : "justify-center"
-            }`}
-          >
-            <Logo
-              className={`transition-all duration-300 ${
-                isSidebarOpen ? "w-32" : "w-10"
-              }`}
-            />
-          </div>
+          {/* Sidebar Logo */}
+          {isSidebarOpen && (
+            <div className="mb-8 flex justify-start pl-2 transition-all duration-300">
+              <Logo className="w-32 transition-all duration-300" />
+            </div>
+          )}
 
           {/* Menu Items */}
-          <ul className="space-y-2 flex-1">
+          <ul
+            className={`space-y-2 flex-1 flex flex-col ${!isSidebarOpen ? "justify-center" : ""
+              }`}
+          >
             {menuItems.map((item) => (
               <li key={item.name}>
                 <NavLink
                   to={item.path}
                   onClick={closeDrawer}
                   className={({ isActive }) =>
-                    `flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-200 text-base font-medium overflow-hidden ${
-                      isActive
-                        ? "bg-primary text-primary-content shadow-md shadow-primary/30"
-                        : "hover:bg-base-200 hover:text-primary"
+                    `flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-200 text-base font-medium overflow-hidden ${isActive
+                      ? "bg-primary text-primary-content shadow-md shadow-primary/30"
+                      : "hover:bg-base-200 hover:text-primary"
                     } ${isSidebarOpen ? "justify-start" : "justify-center"}`
                   }
                   title={!isSidebarOpen ? item.name : ""}
                 >
                   <span className="text-xl shrink-0">{item.icon}</span>
                   <span
-                    className={`whitespace-nowrap transition-all duration-300 ${
-                      isSidebarOpen
+                    className={`whitespace-nowrap transition-all duration-300 ${isSidebarOpen
                         ? "opacity-100 w-auto translate-x-0"
                         : "opacity-0 w-0 -translate-x-full overflow-hidden absolute"
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </span>
@@ -174,9 +169,8 @@ const DashboardLayout = () => {
           {/* Logout Button (Bottom) */}
           <div className="border-t border-base-200 pt-4 mt-4 ">
             <button
-              className={`flex items-center gap-4 px-3 py-3 w-full rounded-lg text-error hover:bg-error/10 transition-colors duration-200 font-medium text-base cursor-pointer overflow-hidden ${
-                isSidebarOpen ? "justify-start" : "justify-center"
-              }`}
+              className={`flex items-center gap-4 px-3 py-3 w-full rounded-lg text-error hover:bg-error/10 transition-colors duration-200 font-medium text-base cursor-pointer overflow-hidden ${isSidebarOpen ? "justify-start" : "justify-center"
+                }`}
               title={!isSidebarOpen ? "Logout" : ""}
             >
               <span className="text-xl shrink-0">
