@@ -6,19 +6,33 @@
   name: "light";
   default: true;
   --color-base-100: #ffffff;
-  --color-base-300: #b2ebf2;
-  --color-primary: #003087;
-  --color-secondary: #0077cc;
-  --color-accent: #000000;
+  --color-base-200: #f8fafc;
+  --color-base-300: #f1f5f9;
+  --color-primary: #4f46e5;
+  --color-primary-content: #ffffff;
+  --color-secondary: #0ea5e9;
+  --color-accent: #8b5cf6;
+  --color-neutral: #1e293b;
+  --color-info: #3b82f6;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
 }
 
 @plugin "daisyui/theme" {
   name: "dark";
   --color-base-100: #0f172a;
-  --color-base-300: #1e3a5f;
-  --color-primary: #3b82f6;
-  --color-secondary: #60a5fa;
-  --color-accent: #06b6d4;
+  --color-base-200: #1e293b;
+  --color-base-300: #334155;
+  --color-primary: #6366f1;
+  --color-primary-content: #ffffff;
+  --color-secondary: #38bdf8;
+  --color-accent: #a78bfa;
+  --color-neutral: #1e293b;
+  --color-info: #60a5fa;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
 }
 
 .space-grotesk {

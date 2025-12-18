@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { Outlet, NavLink } from "react-router";
 import {
+  FaArrowLeft,
+  FaArrowRight,
   FaBars,
   FaBook,
   FaBoxOpen,
@@ -10,10 +11,9 @@ import {
   FaSignOutAlt,
   FaUser,
   FaUsers,
-  FaArrowLeft,
-  FaArrowRight,
 } from "react-icons/fa";
 import { GiBookshelf } from "react-icons/gi";
+import { NavLink, Outlet } from "react-router";
 import Logo from "../components/Logo/Logo";
 
 const DashboardLayout = () => {
@@ -58,7 +58,9 @@ const DashboardLayout = () => {
   ];
 
   return (
-    <div className={`drawer ${isSidebarOpen ? "lg:drawer-open" : ""} font-inter bg-base-100 min-h-screen`}>
+    <div
+      className={`drawer lg:drawer-open font-inter bg-base-100 min-h-screen`}
+    >
       <input
         id="dashboard-drawer"
         type="checkbox"
@@ -87,18 +89,28 @@ const DashboardLayout = () => {
               className="btn btn-square btn-ghost"
               title={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
             >
-              {isSidebarOpen ? <FaArrowLeft className="text-lg" /> : <FaArrowRight className="text-lg" />}
+              {isSidebarOpen ? (
+                <FaArrowLeft className="text-lg" />
+              ) : (
+                <FaArrowRight className="text-lg" />
+              )}
             </button>
           </div>
 
           <div className="flex-1 px-2 mx-2">
-            {!isSidebarOpen && <div className="hidden lg:block"><Logo /></div>}
-            <div className="lg:hidden"><Logo /></div>
+            {!isSidebarOpen && (
+              <div className="hidden lg:block">
+                <Logo className="w-10" />
+              </div>
+            )}
+            <div className="lg:hidden">
+              <Logo className="w-24" />
+            </div>
           </div>
         </div>
 
         {/* Main Content Area with Gradient */}
-        <div className="p-6 md:p-10 flex-1 h-full min-h-screen bg-gradient-to-br from-base-100 via-base-50 to-base-200/50">
+        <div className="p-6 md:p-10 flex-1 h-full min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300/50">
           <Outlet />
         </div>
       </div>
@@ -110,10 +122,22 @@ const DashboardLayout = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="menu p-4 w-72 min-h-full bg-base-100 border-r border-base-200 text-base-content flex flex-col">
+        <div
+          className={`menu p-4 min-h-full bg-base-100 border-r border-base-200 text-base-content flex flex-col transition-all duration-300 ease-in-out ${
+            isSidebarOpen ? "w-72" : "w-20"
+          }`}
+        >
           {/* Sidebar Logo */}
-          <div className="mb-8 pl-2 flex justify-center lg:justify-start">
-            <Logo />
+          <div
+            className={`mb-8 flex transition-all duration-300 ${
+              isSidebarOpen ? "justify-start pl-2" : "justify-center"
+            }`}
+          >
+            <Logo
+              className={`transition-all duration-300 ${
+                isSidebarOpen ? "w-32" : "w-10"
+              }`}
+            />
           </div>
 
           {/* Menu Items */}
@@ -124,40 +148,42 @@ const DashboardLayout = () => {
                   to={item.path}
                   onClick={closeDrawer}
                   className={({ isActive }) =>
-                    `flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-200 text-base font-medium ${isActive
-                      ? "bg-primary text-white shadow-md shadow-primary/30"
-                      : "hover:bg-base-200 hover:text-primary"
-                    }`
+                    `flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-200 text-base font-medium overflow-hidden ${
+                      isActive
+                        ? "bg-primary text-primary-content shadow-md shadow-primary/30"
+                        : "hover:bg-base-200 hover:text-primary"
+                    } ${isSidebarOpen ? "justify-start" : "justify-center"}`
                   }
+                  title={!isSidebarOpen ? item.name : ""}
                 >
-                  <span className="text-lg">{item.icon}</span>
-                  {item.name}
+                  <span className="text-xl shrink-0">{item.icon}</span>
+                  <span
+                    className={`whitespace-nowrap transition-all duration-300 ${
+                      isSidebarOpen
+                        ? "opacity-100 w-auto translate-x-0"
+                        : "opacity-0 w-0 -translate-x-full overflow-hidden absolute"
+                    }`}
+                  >
+                    {item.name}
+                  </span>
                 </NavLink>
               </li>
             ))}
           </ul>
 
           {/* Logout Button (Bottom) */}
-          <div className="border-t border-base-200 pt-4 mt-4">
-            <button className="flex items-center gap-4 px-4 py-3 w-full rounded-lg text-error hover:bg-error/10 transition-colors duration-200 font-medium text-base">
-              <span className="text-lg">
+          <div className="border-t border-base-200 pt-4 mt-4 ">
+            <button
+              className={`flex items-center gap-4 px-3 py-3 w-full rounded-lg text-error hover:bg-error/10 transition-colors duration-200 font-medium text-base cursor-pointer overflow-hidden ${
+                isSidebarOpen ? "justify-start" : "justify-center"
+              }`}
+              title={!isSidebarOpen ? "Logout" : ""}
+            >
+              <span className="text-xl shrink-0">
                 <FaSignOutAlt />
               </span>
-              Logout
+              {isSidebarOpen && <span>Logout</span>}
             </button>
-          </div>
-
-          {/* User Profile Summary */}
-          <div className="mt-6 flex items-center gap-3 px-2">
-            <div className="avatar placeholder">
-              <div className="bg-neutral text-neutral-content rounded-full w-10">
-                <span className="text-xs">UI</span>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold">User Name</span>
-              <span className="text-xs text-base-content/60">Librarian</span>
-            </div>
           </div>
         </div>
       </div>

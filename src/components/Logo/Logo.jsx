@@ -1,11 +1,15 @@
 import { Link } from "react-router";
 import bookLogo from "../../assets/Book Courier Logo.png";
 
-const Logo = () => {
+const Logo = ({ className }) => {
   return (
     <div>
       <Link>
-        <img src={bookLogo} alt="Book Courier Logo" className="w-30 h-30" />
+        <img
+          src={bookLogo}
+          alt="Book Courier Logo"
+          className={className || "w-30"}
+        />
       </Link>
     </div>
   );
