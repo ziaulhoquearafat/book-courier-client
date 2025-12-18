@@ -4,7 +4,7 @@ import bookLogo from "../../assets/Book Courier Logo.png";
 const Logo = ({ className }) => {
   return (
     <div>
-      <Link>
+      <Link to={"/"}>
         <img
           src={bookLogo}
           alt="Book Courier Logo"
