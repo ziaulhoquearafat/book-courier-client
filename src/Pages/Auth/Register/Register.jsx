@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { imageUploadCloudinary } from "../../../utils";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
@@ -11,11 +13,13 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const { registerUser, updateUserProfile } = useAuth();
+  const { registerUser, updateUserProfile, loading, setLoading } = useAuth();
 
   const location = useLocation();
   const navigate = useNavigate();
   console.log("in register", location);
+
+  const axiosSecure = useAxiosSecure();
 
   const handleRegistration = async (data) => {
     console.log(data);
@@ -33,16 +37,27 @@ const Register = () => {
         };
         // update user profile
         updateUserProfile(userProfile)
-          .then(() => {
+          .then(async () => {
+            // Backend use object
+            const userInfo = {
+              name: data.name,
+              email: data.email,
+              image: imageURL,
+            };
+            await axiosSecure.post("users", userInfo);
             console.log("user profile update successfully");
+            toast.success("Registrationi Successfull");
             navigate(location?.state || "/");
           })
           .catch((error) => {
             console.log(error.message);
+            toast.error(error.message);
           });
       })
       .catch((error) => {
         console.log(error.message);
+        toast.error(error.message);
+        setLoading(false);
       });
   };
 
@@ -237,8 +252,15 @@ const Register = () => {
             <button
               className="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white bg-primary hover:bg-secondary focus:outline-none cursor-pointer"
               type="submit"
+              disabled={loading}
             >
-              Create an account
+              {loading ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                </>
+              ) : (
+                "Create an account"
+              )}
             </button>
           </div>
           <p className="text-slate-600 text-sm mt-6 text-center">
