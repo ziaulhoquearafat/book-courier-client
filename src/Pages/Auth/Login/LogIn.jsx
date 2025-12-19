@@ -1,13 +1,14 @@
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import { saveOrUpdateUser } from "../../../utils"; // তোমার axios helper
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const LogIn = () => {
-  const { loginUser } = useAuth();
+  const { loginUser, setLoading, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("location is login", location);
 
   const {
     register,
@@ -15,16 +16,26 @@ const LogIn = () => {
     formState: { errors },
   } = useForm();
 
-  const handleLogin = (data) => {
-    console.log(data);
-    loginUser(data.email, data.password)
-      .then((result) => {
-        console.log(result.user);
-        navigate(location?.state || "/");
-      })
-      .catch((error) => {
-        console.log(error.message);
+  const handleLogin = async (data) => {
+    try {
+      setLoading(true);
+      const result = await loginUser(data.email, data.password);
+
+      // save/update user in DB
+      await saveOrUpdateUser({
+        name: result.user.displayName || "User",
+        email: result.user.email,
+        image: result.user.photoURL || "",
       });
+
+      setLoading(false);
+      navigate(location?.state || "/");
+      toast.success("Logged In Successfull");
+    } catch (error) {
+      setLoading(false);
+      console.log(error.message);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -134,7 +145,11 @@ const LogIn = () => {
             </div>
             <div className="mt-8">
               <button className="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white bg-primary hover:bg-secondary focus:outline-none cursor-pointer">
-                Log In
+                {loading ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  "Log In"
+                )}
               </button>
             </div>
             <p className="text-slate-600 text-sm mt-6 text-center">
