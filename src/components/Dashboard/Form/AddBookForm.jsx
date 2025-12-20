@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import {
   FaAlignLeft,
   FaBook,
@@ -11,7 +12,7 @@ import useAuth from "../../../hooks/useAuth";
 import { imageUploadCloudinary } from "../../../utils";
 
 const AddBookForm = () => {
-  const { user } = useAuth();
+  const { user, loading, setLoading } = useAuth();
 
   const {
     register,
@@ -21,6 +22,7 @@ const AddBookForm = () => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const imageFile = data.image[0];
       const imageUrl = await imageUploadCloudinary(imageFile);
 
@@ -42,10 +44,13 @@ const AddBookForm = () => {
         `${import.meta.env.VITE_API_URL}/books`,
         bookData
       );
-
+      setLoading(false);
       console.log("Book added:", res.data);
+      toast.success("Book Added Successfully!");
     } catch (err) {
+      setLoading(false);
       console.log(err);
+      toast.error(err);
     }
   };
 
@@ -219,7 +224,11 @@ const AddBookForm = () => {
             type="submit"
             className="btn btn-primary w-full text-lg font-medium text-white transition-all hover:scale-[1.01] active:scale-[0.98]"
           >
-            Add Book
+            {loading ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              "Add Book"
+            )}
           </button>
         </div>
       </form>
