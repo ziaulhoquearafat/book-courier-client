@@ -1,23 +1,39 @@
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import { saveOrUpdateUser } from "../../../utils"; // তোমার hook থেকে import
 
 const SocialLogin = () => {
-  const { signInGoogle } = useAuth();
+  const { signInGoogle, setLoading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("location is social", location);
 
-  const handleGoogleSignIn = () => {
-    signInGoogle()
-      .then((result) => {
-        console.log(result.user);
-        navigate(location?.state || "/");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoading(true);
+
+      const result = await signInGoogle();
+      const user = result.user;
+      console.log("Google user:", user);
+
+      // Save or update user in DB
+      const userData = {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+        role: "user",
+      };
+      await saveOrUpdateUser(userData);
+
+      navigate(location?.state || "/");
+      toast.success("Logged In Successfull");
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
-
   return (
     <div>
       <button

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import {
   FaAlignLeft,
@@ -15,26 +16,37 @@ const AddBookForm = () => {
   const {
     register,
     handleSubmit,
-
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { name, description, price, category, image } = data;
-    const imageFile = image[0];
-    const imageUrl = await imageUploadCloudinary(imageFile);
-    const plantData = {
-      image: imageUrl,
-      name,
-      description,
-      price: Number(price),
-      category,
-      seller: {
-        name: user?.displayName,
-        email: user?.email,
-      },
-    };
-    console.table(plantData);
+    try {
+      const imageFile = data.image[0];
+      const imageUrl = await imageUploadCloudinary(imageFile);
+
+      const bookData = {
+        title: data.title,
+        author: data.author,
+        description: data.description,
+        price: Number(data.price),
+        status: data.status, // published / unpublished
+        image: imageUrl,
+        seller: {
+          name: user?.displayName,
+          email: user?.email,
+          image: user?.photoURL,
+        },
+      };
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/books`,
+        bookData
+      );
+
+      console.log("Book added:", res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
