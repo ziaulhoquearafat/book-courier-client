@@ -6,7 +6,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import PurchaseModal from "../../components/Modal/PurchaseModal";
 
 const BookDetails = () => {
-  const { id } = useParams(); // URL: /book-details/:bookId
+  const { id } = useParams();
   console.log(id);
   const [isOpen, setIsOpen] = useState(false);
 

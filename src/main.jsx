@@ -7,6 +7,8 @@ import AuthProvider from "./contexts/AuthContext/AuthProvider.jsx";
 import "./index.css";
 import { router } from "./routes/router.jsx";
 
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 // Create a client
 const queryClient = new QueryClient();
 
@@ -17,6 +19,7 @@ createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
         <Toaster />
       </AuthProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>
 );
