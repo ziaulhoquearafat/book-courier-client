@@ -1,19 +1,42 @@
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
+import { useParams } from "react-router";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import PurchaseModal from "../../components/Modal/PurchaseModal";
 
 const BookDetails = () => {
-  // Hardcoded book data
-  const book = {
-    _id: "1",
-    title: "Atomic Habits",
-    author: "James Clear",
-    price: 500,
-    image:
-      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80",
-    description:
-      "No matter your goals, Atomic Habits offers a proven framework for improving--every day. James Clear reveals practical strategies that will teach you exactly how to form good habits, break bad ones, and master the tiny behaviors that lead to remarkable results.",
-    sellerName: "Book Heaven",
-    sellerEmail: "sales@bookheaven.com",
-  };
+  const { id } = useParams(); // URL: /book-details/:bookId
+  console.log(id);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Fetch single book
+  const {
+    data: book,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["books", id],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/books/${id}`
+      );
+      return res.data;
+    },
+  });
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
+
+  if (isLoading) return <LoadingSpinner />;
+
+  if (isError)
+    return (
+      <p className="text-error text-center">
+        Failed to load book: {error.message}
+      </p>
+    );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
@@ -37,22 +60,20 @@ const BookDetails = () => {
             </p>
           </div>
 
-          <div className="text-3xl font-bold text-primary">৳ {book.price}</div>
+          <div className="text-3xl font-bold text-primary">$ {book.price}</div>
 
           {/* Seller Info */}
           <div className="bg-base-200 p-4 rounded-lg border border-base-300">
             <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">
               Seller Information
             </h3>
-            <p className="font-medium text-neutral">{book.sellerName}</p>
-            <p className="text-sm text-gray-600">{book.sellerEmail}</p>
+            <p className="font-medium text-neutral">{book.seller?.name}</p>
+            <p className="text-sm text-gray-600">{book.seller?.email}</p>
           </div>
 
           {/* Order Button */}
           <button
-            onClick={() =>
-              document.getElementById("purchase_modal").showModal()
-            }
+            onClick={openModal}
             className="btn btn-primary w-full md:w-fit px-8"
           >
             Order Now
@@ -68,8 +89,10 @@ const BookDetails = () => {
         <p className="text-gray-600 leading-relaxed">{book.description}</p>
       </div>
 
-      {/* DaisyUI Modal */}
-      <PurchaseModal book={book} />
+      {/* Purchase Modal */}
+      {isOpen && (
+        <PurchaseModal book={book} isOpen={isOpen} onClose={closeModal} />
+      )}
     </div>
   );
 };

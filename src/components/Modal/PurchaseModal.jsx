@@ -1,9 +1,10 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 
-const PurchaseModal = ({ book }) => {
+const PurchaseModal = ({ book, isOpen, onClose }) => {
   const { user, loading, setLoading } = useAuth();
 
   const {
@@ -12,6 +13,12 @@ const PurchaseModal = ({ book }) => {
     reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    if (isOpen) {
+      document.getElementById("purchase_modal").showModal();
+    }
+  }, [isOpen]);
 
   const onSubmit = async (data) => {
     try {
@@ -31,8 +38,9 @@ const PurchaseModal = ({ book }) => {
 
       reset();
 
-      // ✅ DaisyUI modal auto close
+      // ✅ DaisyUI modal close
       document.getElementById("purchase_modal").close();
+      onClose();
     } catch (error) {
       console.error(error);
       toast.error("Failed to place order");
@@ -41,8 +49,13 @@ const PurchaseModal = ({ book }) => {
     }
   };
 
+  const handleClose = () => {
+    document.getElementById("purchase_modal").close();
+    onClose();
+  };
+
   return (
-    <dialog id="purchase_modal" className="modal">
+    <dialog id="purchase_modal" className="modal" onClose={onClose}>
       <div className="modal-box bg-base-300">
         <h3 className="font-bold text-xl text-primary mb-4">
           Place Your Order
@@ -113,12 +126,21 @@ const PurchaseModal = ({ book }) => {
               className="btn btn-primary w-full"
               disabled={loading}
             >
-              {loading ? "Placing Order..." : "Place Order"}
+              {loading ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : (
+                "Place Order"
+              )}
             </button>
 
-            <form method="dialog" className="w-full">
-              <button className="btn btn-secondary w-full">Cancel</button>
-            </form>
+            {/* Cancel Button */}
+            <button
+              type="button"
+              className="btn btn-secondary w-full"
+              onClick={handleClose}
+            >
+              Cancel
+            </button>
           </div>
         </form>
       </div>

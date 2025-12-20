@@ -114,7 +114,7 @@ const AddBookForm = () => {
           <label className="label">Description</label>
           <div className="relative">
             <textarea
-              className="textarea textarea-bordered pl-10"
+              className="textarea textarea-bordered pl-10 w-full"
               rows="4"
               {...register("description", {
                 required: "Description is required",

@@ -17,6 +17,7 @@ import MyBooks from "../Pages/Dashboard/Librarian/MyBooks";
 import Invoice from "../Pages/Dashboard/User/Invoice";
 import MyOrders from "../Pages/Dashboard/User/MyOrders";
 import Home from "../Pages/Home/Home/Home";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -61,7 +62,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout></DashboardLayout>,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "my-orders",
