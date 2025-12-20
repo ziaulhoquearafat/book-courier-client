@@ -1,28 +1,49 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import {
-  FaAlignLeft,
-  FaBook,
-  FaCloudUploadAlt,
-  FaDollarSign,
-  FaUser,
-} from "react-icons/fa";
+import { FaAlignLeft, FaBook, FaDollarSign, FaUser } from "react-icons/fa";
 import useAuth from "../../../hooks/useAuth";
 import { imageUploadCloudinary } from "../../../utils";
 
 const AddBookForm = () => {
-  const { user, loading, setLoading } = useAuth();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (payload) => {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/books`,
+        payload
+      );
+      return res.data;
+    },
+
+    onSuccess: () => {
+      toast.success("Book Added Successfully ✅");
+
+      // 🔥 AllBooks query refresh করবে
+      queryClient.invalidateQueries(["books"]);
+
+      // 🔄 form clear
+      reset();
+    },
+
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to add book ❌");
+    },
+  });
+
   const onSubmit = async (data) => {
     try {
-      setLoading(true);
       const imageFile = data.image[0];
       const imageUrl = await imageUploadCloudinary(imageFile);
 
@@ -31,7 +52,7 @@ const AddBookForm = () => {
         author: data.author,
         description: data.description,
         price: Number(data.price),
-        status: data.status, // published / unpublished
+        status: data.status,
         image: imageUrl,
         seller: {
           name: user?.displayName,
@@ -40,146 +61,87 @@ const AddBookForm = () => {
         },
       };
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/books`,
-        bookData
-      );
-      setLoading(false);
-      console.log("Book added:", res.data);
-      toast.success("Book Added Successfully!");
+      await mutateAsync(bookData);
     } catch (err) {
-      setLoading(false);
-      console.log(err);
-      toast.error(err);
+      console.error(err);
+      toast.error("Image upload failed ❌");
     }
   };
 
   return (
     <div className="w-full max-w-3xl mx-auto p-8 bg-base-100 rounded-xl shadow-lg border border-base-200">
       <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-primary space-grotesk">
-          Add New Book
-        </h2>
-        <p className="text-base-content/70 mt-2 inter">
-          Enter the details to add a new book to the inventory
+        <h2 className="text-3xl font-bold text-primary">Add New Book</h2>
+        <p className="text-base-content/70 mt-2">
+          Enter the details to add a new book
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 inter">
-        {/* Book Name & Author - 2 Col Grid */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Book Name & Author */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-medium">Book Name</span>
-            </label>
+          <div className="form-control">
+            <label className="label">Book Name</label>
             <div className="relative">
               <input
-                type="text"
-                placeholder="Enter book name"
-                className={`input input-bordered w-full pl-10 ${
-                  errors.title ? "input-error" : ""
-                }`}
+                className="input input-bordered pl-10"
                 {...register("title", { required: "Book name is required" })}
               />
-              <FaBook className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <FaBook className="absolute left-3 top-1/2 -translate-y-1/2" />
             </div>
             {errors.title && (
-              <span className="text-error text-sm mt-1">
-                {errors.title.message}
-              </span>
+              <p className="text-error text-sm">{errors.title.message}</p>
             )}
           </div>
 
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-medium">Author Name</span>
-            </label>
+          <div className="form-control">
+            <label className="label">Author Name</label>
             <div className="relative">
               <input
-                type="text"
-                placeholder="Enter author name"
-                className={`input input-bordered w-full pl-10 ${
-                  errors.author ? "input-error" : ""
-                }`}
-                {...register("author", { required: "Author name is required" })}
+                className="input input-bordered pl-10"
+                {...register("author", { required: "Author is required" })}
               />
-              <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <FaUser className="absolute left-3 top-1/2 -translate-y-1/2" />
             </div>
             {errors.author && (
-              <span className="text-error text-sm mt-1">
-                {errors.author.message}
-              </span>
+              <p className="text-error text-sm">{errors.author.message}</p>
             )}
           </div>
         </div>
 
-        {/* ----- */}
-
-        {/* Description - Full Width */}
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text font-medium">Description</span>
-          </label>
+        {/* Description */}
+        <div className="form-control">
+          <label className="label">Description</label>
           <div className="relative">
             <textarea
-              placeholder="Enter book description"
+              className="textarea textarea-bordered pl-10"
               rows="4"
-              className={`textarea textarea-bordered w-full pl-10 pt-3 ${
-                errors.description ? "textarea-error" : ""
-              }`}
               {...register("description", {
                 required: "Description is required",
-                minLength: {
-                  value: 10,
-                  message: "Description must be at least 10 characters",
-                },
               })}
             />
-            <FaAlignLeft className="absolute left-3 top-4 text-gray-400" />
+            <FaAlignLeft className="absolute left-3 top-4" />
           </div>
-          {errors.description && (
-            <span className="text-error text-sm mt-1">
-              {errors.description.message}
-            </span>
-          )}
         </div>
 
-        {/* ----- */}
-
-        {/* Price & Status - 2 Col Grid */}
+        {/* Price & Status */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-medium">Price</span>
-            </label>
+          <div className="form-control">
+            <label className="label">Price</label>
             <div className="relative">
               <input
                 type="number"
-                step="0.01"
-                placeholder="0.00"
-                className={`input input-bordered w-full pl-10 ${
-                  errors.price ? "input-error" : ""
-                }`}
-                {...register("price", {
-                  required: "Price is required",
-                  min: 0,
-                })}
+                className="input input-bordered pl-10"
+                {...register("price", { required: "Price is required" })}
               />
-              <FaDollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <FaDollarSign className="absolute left-3 top-1/2 -translate-y-1/2" />
             </div>
-            {errors.price && (
-              <span className="text-error text-sm mt-1">
-                {errors.price.message}
-              </span>
-            )}
           </div>
 
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-medium">Status</span>
-            </label>
+          <div className="form-control">
+            <label className="label">Status</label>
             <select
-              className="select select-bordered w-full"
+              className="select select-bordered"
               defaultValue="published"
               {...register("status")}
             >
@@ -189,48 +151,24 @@ const AddBookForm = () => {
           </div>
         </div>
 
-        {/* Image Upload - Full Width */}
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text font-medium">Book Cover Image</span>
-          </label>
-          <div className="border-2 border-dashed border-base-300 rounded-lg p-8 text-center hover:bg-base-50 transition-colors relative">
-            <input
-              type="file"
-              accept="image/*"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              {...register("image", { required: "Book image is required" })}
-            />
-            <div className="flex flex-col items-center justify-center pointer-events-none">
-              <FaCloudUploadAlt className="text-4xl text-primary mb-2" />
-              <p className="font-semibold text-lg">
-                Click to upload or drag and drop
-              </p>
-              <p className="text-sm text-base-content/60">
-                SVG, PNG, JPG or GIF (max. 800x400px)
-              </p>
-            </div>
-          </div>
-          {errors.image && (
-            <span className="text-error text-sm mt-1 text-center block">
-              {errors.image.message}
-            </span>
-          )}
+        {/* Image */}
+        <div className="form-control">
+          <label className="label">Book Image</label>
+          <input
+            type="file"
+            className="file-input file-input-bordered w-full"
+            {...register("image", { required: true })}
+          />
         </div>
 
-        {/* Submit Button */}
-        <div className="form-control mt-6">
-          <button
-            type="submit"
-            className="btn btn-primary w-full text-lg font-medium text-white transition-all hover:scale-[1.01] active:scale-[0.98]"
-          >
-            {loading ? (
-              <span className="loading loading-spinner loading-sm"></span>
-            ) : (
-              "Add Book"
-            )}
-          </button>
-        </div>
+        {/* Submit */}
+        <button disabled={isPending} className="btn btn-primary w-full">
+          {isPending ? (
+            <span className="loading loading-spinner loading-sm"></span>
+          ) : (
+            "Add Book"
+          )}
+        </button>
       </form>
     </div>
   );
