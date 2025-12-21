@@ -4,11 +4,13 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import RootLayouts from "../layouts/RootLayouts";
 import About from "../Pages/About/About";
 import AllBooks from "../Pages/AllBooks/AllBooks";
-import LogIn from "../Pages/Auth/Login/Login";
+
+import LogIn from "../Pages/Auth/Login/LogIn";
 import Register from "../Pages/Auth/Register/Register";
 import BookDetails from "../Pages/BookDetails/BookDetails";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import ManageBooks from "../Pages/Dashboard/Admin/ManageBooks";
+
 import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
 import MyProfile from "../Pages/Dashboard/Common/MyProfile";
 import AddBooks from "../Pages/Dashboard/Librarian/AddBooks";
