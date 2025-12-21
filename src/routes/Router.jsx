@@ -12,6 +12,7 @@ import ManageBooks from "../Pages/Dashboard/Admin/ManageBooks";
 import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
 import MyProfile from "../Pages/Dashboard/Common/MyProfile";
 import AddBooks from "../Pages/Dashboard/Librarian/AddBooks";
+import EditBook from "../Pages/Dashboard/Librarian/EditBook";
 import ManageOrders from "../Pages/Dashboard/Librarian/ManageOrders";
 import MyBooks from "../Pages/Dashboard/Librarian/MyBooks";
 import Invoice from "../Pages/Dashboard/User/Invoice";
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
       {
         path: "my-books",
         element: <MyBooks />,
+      },
+      {
+        path: "edit-books/:id",
+        element: <EditBook />,
       },
       {
         path: "manage-orders",

@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const MyBooks = () => {
-  // Fetch my books
+  const navigate = useNavigate();
+
   const {
     data: books = [],
     isLoading,
@@ -11,7 +13,10 @@ const MyBooks = () => {
   } = useQuery({
     queryKey: ["myBooks"],
     queryFn: async () => {
-      const token = localStorage.getItem("accessToken"); // token from login
+      const token = localStorage.getItem("accessToken"); // get token from login
+      if (!token) {
+        navigate("/login"); // token na thakle login e pathano
+      }
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/my-books`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -23,10 +28,15 @@ const MyBooks = () => {
 
   if (isLoading) return <p>Loading...</p>;
   if (isError)
-    return <p className="text-error">Failed to load books: {error.message}</p>;
+    return (
+      <p className="text-error text-center">
+        Failed to load books: {error.message}
+      </p>
+    );
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">My Books</h2>
       <table className="table table-zebra w-full">
         <thead>
           <tr>
@@ -53,7 +63,12 @@ const MyBooks = () => {
               <td>{book.author}</td>
               <td>$ {book.price}</td>
               <td>
-                <button className="btn btn-sm btn-primary">Edit</button>
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={() => navigate(`/dashboard/edit-books/${book._id}`)}
+                >
+                  Edit
+                </button>
               </td>
             </tr>
           ))}
