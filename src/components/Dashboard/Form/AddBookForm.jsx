@@ -1,14 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaAlignLeft, FaBook, FaDollarSign, FaUser } from "react-icons/fa";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure"; // ✅ axiosSecure
 import { imageUploadCloudinary } from "../../../utils";
 
 const AddBookForm = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const axiosSecure = useAxiosSecure(); // ✅ use axiosSecure instance
 
   const {
     register,
@@ -19,20 +20,14 @@ const AddBookForm = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (payload) => {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/books`,
-        payload
-      );
+      // ✅ use axiosSecure to POST
+      const res = await axiosSecure.post("/books", payload);
       return res.data;
     },
 
     onSuccess: () => {
       toast.success("Book Added Successfully ✅");
-
-      // 🔥 AllBooks query refresh করবে
       queryClient.invalidateQueries(["books"]);
-
-      // 🔄 form clear
       reset();
     },
 

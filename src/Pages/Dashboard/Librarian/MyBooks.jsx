@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useNavigate } from "react-router";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyBooks = () => {
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure(); // ✅ use secure axios instance
 
   const {
     data: books = [],
@@ -13,15 +14,7 @@ const MyBooks = () => {
   } = useQuery({
     queryKey: ["myBooks"],
     queryFn: async () => {
-      const token = localStorage.getItem("accessToken"); // get token from login
-      if (!token) {
-        navigate("/login"); // token na thakle login e pathano
-      }
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/my-books`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axiosSecure.get("/my-books"); // ✅ token automatically attach
       return res.data;
     },
   });
