@@ -15,8 +15,18 @@ import {
 import { GiBookshelf } from "react-icons/gi";
 import { NavLink, Outlet } from "react-router";
 import Logo from "../components/Logo/Logo";
+import useAuth from "../hooks/useAuth";
 
 const DashboardLayout = () => {
+  const { logOut } = useAuth();
+
+  const handleLogOut = () => {
+    logOut()
+      .then()
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
   const drawerToggleRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -123,8 +133,9 @@ const DashboardLayout = () => {
           className="drawer-overlay"
         ></label>
         <div
-          className={`menu p-4 min-h-full bg-base-100 border-r border-base-200 text-base-content flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? "w-72" : "w-20"
-            }`}
+          className={`menu p-4 min-h-full bg-base-100 border-r border-base-200 text-base-content flex flex-col transition-all duration-300 ease-in-out ${
+            isSidebarOpen ? "w-72" : "w-20"
+          }`}
         >
           {/* Sidebar Logo */}
           {/* Sidebar Logo */}
@@ -136,8 +147,9 @@ const DashboardLayout = () => {
 
           {/* Menu Items */}
           <ul
-            className={`space-y-2 flex-1 flex flex-col ${!isSidebarOpen ? "justify-center" : ""
-              }`}
+            className={`space-y-2 flex-1 flex flex-col ${
+              !isSidebarOpen ? "justify-center" : ""
+            }`}
           >
             {menuItems.map((item) => (
               <li key={item.name}>
@@ -145,19 +157,21 @@ const DashboardLayout = () => {
                   to={item.path}
                   onClick={closeDrawer}
                   className={({ isActive }) =>
-                    `flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-200 text-base font-medium overflow-hidden ${isActive
-                      ? "bg-primary text-primary-content shadow-md shadow-primary/30"
-                      : "hover:bg-base-200 hover:text-primary"
+                    `flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-200 text-base font-medium overflow-hidden ${
+                      isActive
+                        ? "bg-primary text-primary-content shadow-md shadow-primary/30"
+                        : "hover:bg-base-200 hover:text-primary"
                     } ${isSidebarOpen ? "justify-start" : "justify-center"}`
                   }
                   title={!isSidebarOpen ? item.name : ""}
                 >
                   <span className="text-xl shrink-0">{item.icon}</span>
                   <span
-                    className={`whitespace-nowrap transition-all duration-300 ${isSidebarOpen
+                    className={`whitespace-nowrap transition-all duration-300 ${
+                      isSidebarOpen
                         ? "opacity-100 w-auto translate-x-0"
                         : "opacity-0 w-0 -translate-x-full overflow-hidden absolute"
-                      }`}
+                    }`}
                   >
                     {item.name}
                   </span>
@@ -169,8 +183,10 @@ const DashboardLayout = () => {
           {/* Logout Button (Bottom) */}
           <div className="border-t border-base-200 pt-4 mt-4 ">
             <button
-              className={`flex items-center gap-4 px-3 py-3 w-full rounded-lg text-error hover:bg-error/10 transition-colors duration-200 font-medium text-base cursor-pointer overflow-hidden ${isSidebarOpen ? "justify-start" : "justify-center"
-                }`}
+              onClick={handleLogOut}
+              className={`flex items-center gap-4 px-3 py-3 w-full rounded-lg text-error hover:bg-error/10 transition-colors duration-200 font-medium text-base cursor-pointer overflow-hidden ${
+                isSidebarOpen ? "justify-start" : "justify-center"
+              }`}
               title={!isSidebarOpen ? "Logout" : ""}
             >
               <span className="text-xl shrink-0">

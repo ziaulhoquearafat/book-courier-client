@@ -162,9 +162,8 @@ const ManageUsers = () => {
             {/* Admin Option */}
             <button
               onClick={() => handleRoleUpdate("admin")}
-              className={`btn justify-start gap-4 ${
-                selectedUser?.role === "admin" ? "btn-primary" : "btn-outline"
-              }`}
+              className={`btn justify-start gap-4 ${selectedUser?.role === "admin" ? "btn-primary" : "btn-outline"
+                }`}
             >
               <span className="w-4 h-4 rounded-full border border-current flex items-center justify-center">
                 {selectedUser?.role === "admin" && (
@@ -177,11 +176,10 @@ const ManageUsers = () => {
             {/* Librarian Option */}
             <button
               onClick={() => handleRoleUpdate("librarian")}
-              className={`btn justify-start gap-4 ${
-                selectedUser?.role === "librarian"
+              className={`btn justify-start gap-4 ${selectedUser?.role === "librarian"
                   ? "btn-secondary"
                   : "btn-outline"
-              }`}
+                }`}
             >
               <span className="w-4 h-4 rounded-full border border-current flex items-center justify-center">
                 {selectedUser?.role === "librarian" && (
@@ -194,11 +192,10 @@ const ManageUsers = () => {
             {/* User Option */}
             <button
               onClick={() => handleRoleUpdate("user")}
-              className={`btn justify-start gap-4 ${
-                selectedUser?.role === "user" || !selectedUser?.role
+              className={`btn justify-start gap-4 ${selectedUser?.role === "user" || !selectedUser?.role
                   ? "btn-accent"
                   : "btn-outline"
-              }`}
+                }`}
             >
               <span className="w-4 h-4 rounded-full border border-current flex items-center justify-center">
                 {(selectedUser?.role === "user" || !selectedUser?.role) && (
