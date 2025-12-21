@@ -1,11 +1,12 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure"; // ✅ axiosSecure
 
 const PurchaseModal = ({ book, isOpen, onClose }) => {
   const { user, loading, setLoading } = useAuth();
+  const axiosSecure = useAxiosSecure(); // ✅ use secure axios instance
 
   const {
     register,
@@ -32,7 +33,7 @@ const PurchaseModal = ({ book, isOpen, onClose }) => {
         address: data.address,
       };
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/orders`, orderData);
+      await axiosSecure.post("/orders", orderData); // ✅ JWT auto attach
 
       toast.success("Order placed successfully!");
 
@@ -43,7 +44,7 @@ const PurchaseModal = ({ book, isOpen, onClose }) => {
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to place order");
+      toast.error("Failed to place order ❌");
     } finally {
       setLoading(false);
     }

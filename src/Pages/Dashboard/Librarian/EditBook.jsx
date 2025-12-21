@@ -1,28 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const EditBook = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const axiosSecure = useAxiosSecure();
 
   // Fetch single book
   const { data: book, isLoading } = useQuery({
     queryKey: ["books", id],
     queryFn: async () => {
-      const token = localStorage.getItem("accessToken");
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/books/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axiosSecure.get(`/books/${id}`);
       return res.data;
     },
   });
@@ -58,19 +51,16 @@ const EditBook = () => {
 
   const updateBookMutation = useMutation({
     mutationFn: async (data) => {
-      const token = localStorage.getItem("accessToken");
-      const res = await axios.patch(
-        `${import.meta.env.VITE_API_URL}/books/${id}`,
-        data,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axiosSecure.patch(`/books/${id}`, data);
       return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["books", id]);
       navigate("/dashboard/my-books");
+    },
+    onError: (error) => {
+      console.error(error);
+      alert("Failed to update book ❌");
     },
   });
 
