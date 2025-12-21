@@ -69,7 +69,7 @@ const DashboardLayout = () => {
 
   return (
     <div
-      className={`drawer lg:drawer-open font-inter bg-base-100 min-h-screen`}
+      className={`drawer lg:drawer-open font-inter bg-gradient-to-br from-slate-200 via-white to-blue-100 min-h-screen`}
     >
       <input
         id="dashboard-drawer"

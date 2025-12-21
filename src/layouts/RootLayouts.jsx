@@ -4,7 +4,7 @@ import Navbar from "../Pages/Shared/Navbar/Navbar";
 
 const RootLayouts = () => {
   return (
-    <div className="bg-base-100">
+    <div className="bg-gradient-to-br from-slate-200 via-white to-blue-200">
       <Navbar />
       <div className="max-w-7xl mx-auto">
         <Outlet />
