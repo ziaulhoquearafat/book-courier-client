@@ -43,6 +43,7 @@ const Register = () => {
               name: data.name,
               email: data.email,
               image: imageURL,
+              role: "user",
             };
             await axiosSecure.post("users", userInfo);
             console.log("user profile update successfully");
@@ -128,11 +129,11 @@ const Register = () => {
               <div className="relative flex items-center">
                 <input
                   className="text-slate-900 bg-white border border-slate-300 w-full text-sm pl-4 pr-8 py-2.5 rounded-md file-input"
-                  name="name"
+                  name="photo"
                   placeholder="Photo"
                   required
                   type="file"
-                  {...register("photo", { message: "Photo is Required" })}
+                  {...register("photo", { required: "Photo is Required" })}
                 />
                 {errors.photo && (
                   <p className="text-red-500 text-xs mt-1">
