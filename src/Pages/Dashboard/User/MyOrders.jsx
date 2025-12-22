@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router";
+import axios from "axios";
 import Swal from "sweetalert2";
+import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyOrders = () => {
   const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
 
   const {
     data: orders = [],
@@ -14,9 +16,36 @@ const MyOrders = () => {
     queryKey: ["my-orders"],
     queryFn: async () => {
       const res = await axiosSecure.get("/my-orders");
+      console.log(res.data);
       return res.data;
     },
   });
+
+  const handlePayment = async (order) => {
+    try {
+      const paymentInfo = {
+        _id: order._id,
+        bookId: order.bookId,
+        bookTitle: order.bookTitle,
+        bookImage: order.bookImage,
+        price: order.price,
+        customer: {
+          name: user?.displayName,
+          email: user?.email,
+        },
+      };
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/create-checkout-session`,
+        paymentInfo
+      );
+
+      window.location.replace(res.data.url); // 🔥 IMPORTANT
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "Payment failed", "error");
+    }
+  };
 
   const handleCancel = async (id) => {
     const result = await Swal.fire({
@@ -62,7 +91,6 @@ const MyOrders = () => {
             {orders.map((order, index) => (
               <tr key={order._id}>
                 <td>{index + 1}</td>
-
                 <td className="flex items-center gap-3">
                   <img
                     src={order.bookImage}
@@ -71,9 +99,7 @@ const MyOrders = () => {
                   />
                   <span>{order.bookTitle}</span>
                 </td>
-
                 <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-
                 <td>
                   <span
                     className={`badge ${
@@ -87,7 +113,6 @@ const MyOrders = () => {
                     {order.orderStatus}
                   </span>
                 </td>
-
                 <td className="space-x-2">
                   {/* Cancel Button */}
                   {order.orderStatus === "pending" && (
@@ -102,12 +127,12 @@ const MyOrders = () => {
                   {/* Pay Now Button */}
                   {order.orderStatus === "pending" &&
                     order.paymentStatus === "unpaid" && (
-                      <Link
-                        to={`/dashboard/payment/${order._id}`}
+                      <button
                         className="btn btn-sm btn-success"
+                        onClick={() => handlePayment(order)}
                       >
                         Pay Now
-                      </Link>
+                      </button>
                     )}
                 </td>
               </tr>
