@@ -22,7 +22,8 @@ import Invoice from "../Pages/Dashboard/User/Invoice";
 import MyOrders from "../Pages/Dashboard/User/MyOrders";
 import Wishlist from "../Pages/Dashboard/User/Wishlist";
 import ErrorPages from "../Pages/ErrorPages";
-import Home from "../Pages/Home/Home/Home";
+
+import Home from "../Pages/Home/Home";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import PrivateRoute from "./PrivateRoute";
 
