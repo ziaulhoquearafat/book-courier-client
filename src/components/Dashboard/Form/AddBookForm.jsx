@@ -5,9 +5,10 @@ import { FaAlignLeft, FaBook, FaDollarSign, FaUser } from "react-icons/fa";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure"; // ✅ axiosSecure
 import { imageUploadCloudinary } from "../../../utils";
+import LoadingSpinner from "../../LoadingSpinner";
 
 const AddBookForm = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure(); // ✅ use axiosSecure instance
 
@@ -62,6 +63,8 @@ const AddBookForm = () => {
       toast.error("Image upload failed ❌");
     }
   };
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="w-full max-w-3xl mx-auto p-8 bg-base-100 rounded-xl shadow-lg border border-base-200">

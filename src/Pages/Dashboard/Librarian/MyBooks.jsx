@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { FaEdit, FaShoppingBag } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import { FaEdit } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyBooks = () => {
@@ -22,8 +22,18 @@ const MyBooks = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-bars loading-lg text-primary"></span>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FaShoppingBag className="text-white text-2xl animate-pulse" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            Loading Your Orders...
+          </h3>
+          <div className="w-32 h-2 bg-gray-200 rounded-full mx-auto overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-pulse"></div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -98,9 +108,7 @@ const MyBooks = () => {
 
                   <td className="font-medium">{book.author}</td>
 
-                  <td className="font-semibold text-primary">
-                    $ {book.price}
-                  </td>
+                  <td className="font-semibold text-primary">$ {book.price}</td>
 
                   {/* Actions Buttons */}
                   <td className="text-right">
@@ -108,7 +116,9 @@ const MyBooks = () => {
                       <div className="tooltip" data-tip="Edit Book">
                         <button
                           className="btn btn-sm btn-square btn-outline btn-primary hover:btn-primary"
-                          onClick={() => navigate(`/dashboard/edit-books/${book._id}`)}
+                          onClick={() =>
+                            navigate(`/dashboard/edit-books/${book._id}`)
+                          }
                         >
                           <FaEdit />
                         </button>

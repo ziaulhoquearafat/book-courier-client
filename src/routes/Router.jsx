@@ -13,6 +13,7 @@ import ManageBooks from "../Pages/Dashboard/Admin/ManageBooks";
 
 import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
 import MyProfile from "../Pages/Dashboard/Common/MyProfile";
+import DashboardHome from "../Pages/Dashboard/DashboardHome";
 import AddBooks from "../Pages/Dashboard/Librarian/AddBooks";
 import EditBook from "../Pages/Dashboard/Librarian/EditBook";
 import ManageOrders from "../Pages/Dashboard/Librarian/ManageOrders";
@@ -76,6 +77,10 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        index: true,
+        element: <DashboardHome />,
+      },
       {
         path: "my-orders",
         element: <MyOrders />,
