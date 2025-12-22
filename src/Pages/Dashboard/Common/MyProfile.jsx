@@ -1,11 +1,15 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../../contexts/AuthContext/AuthContext";
 import toast from "react-hot-toast";
 import { FaUser, FaEnvelope, FaPen, FaCamera } from "react-icons/fa";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyProfile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+  const [role, setRole] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -16,6 +20,18 @@ const MyProfile = () => {
       photoURL: user?.photoURL || "",
     },
   });
+
+  // Fetch user role
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure.get(`/users/${user.email}/role`).then((res) => {
+        setRole(res.data.role || "user");
+      }).catch((error) => {
+        console.error("Error fetching role:", error);
+        setRole("user"); // Default fallback
+      });
+    }
+  }, [user?.email, axiosSecure]);
 
   const onSubmit = (data) => {
     updateUserProfile({
@@ -70,7 +86,7 @@ const MyProfile = () => {
                   <FaEnvelope /> {user?.email}
                 </span>
                 <span className="badge badge-primary badge-outline text-xs font-semibold">
-                  Librarian
+                  {role ? role.charAt(0).toUpperCase() + role.slice(1) : "User"}
                 </span>
               </div>
             </div>

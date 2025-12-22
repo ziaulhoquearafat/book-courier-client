@@ -7,6 +7,7 @@ import {
   FaBoxOpen,
   FaClipboardList,
   FaFileInvoiceDollar,
+  FaHeart,
   FaPlusSquare,
   FaSignOutAlt,
   FaUser,
@@ -58,6 +59,12 @@ const DashboardLayout = () => {
       name: "Invoices",
       icon: <FaFileInvoiceDollar />,
       path: "/dashboard/invoices",
+      roles: ["user"],
+    },
+    {
+      name: "Wishlist",
+      icon: <FaHeart />,
+      path: "/dashboard/wishlist",
       roles: ["user"],
     },
     {

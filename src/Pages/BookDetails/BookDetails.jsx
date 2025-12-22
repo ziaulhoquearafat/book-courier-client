@@ -82,18 +82,31 @@ const BookDetails = () => {
     }
   };
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 },
-  };
+  // Wishlist
+  const addToWishlist = async (bookId) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/wishlist`,
+        { bookId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+          },
+        }
+      );
 
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+      if (res.data.success) {
+        Swal.fire("Success", "Book added to wishlist!", "success");
+      } else {
+        Swal.fire("Info", res.data.message || "Already in wishlist", "info");
+      }
+    } catch (error) {
+      Swal.fire(
+        "Error",
+        error.response?.data?.message || "Failed to add to wishlist",
+        "error"
+      );
+    }
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -157,7 +170,10 @@ const BookDetails = () => {
 
               {/* Action Buttons */}
               <div className="flex gap-2 mt-4">
-                <button className="flex-1 bg-white hover:bg-gray-50 text-gray-700 py-2 px-3 rounded-lg border border-gray-200 transition-all duration-200 hover:shadow-md flex items-center justify-center gap-1 text-sm">
+                <button
+                  onClick={() => addToWishlist(book._id)}
+                  className="flex-1 bg-white hover:bg-gray-50 text-gray-700 py-2 px-3 rounded-lg border border-gray-200 transition-all duration-200 hover:shadow-md flex items-center justify-center gap-1 text-sm"
+                >
                   <FaHeart className="text-red-500 text-sm" />
                   <span className="font-medium">Wishlist</span>
                 </button>
