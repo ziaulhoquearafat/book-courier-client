@@ -20,6 +20,7 @@ import ManageOrders from "../Pages/Dashboard/Librarian/ManageOrders";
 import MyBooks from "../Pages/Dashboard/Librarian/MyBooks";
 import Invoice from "../Pages/Dashboard/User/Invoice";
 import MyOrders from "../Pages/Dashboard/User/MyOrders";
+import ErrorPages from "../Pages/ErrorPages";
 import Home from "../Pages/Home/Home/Home";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import PrivateRoute from "./PrivateRoute";
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayouts />,
+    errorElement: <ErrorPages />,
     children: [
       {
         index: true,
