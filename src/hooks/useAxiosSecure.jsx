@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAuth } from "firebase/auth";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import useAuth from "./useAuth";
@@ -10,12 +11,14 @@ const axiosInstance = axios.create({
 const useAxiosSecure = () => {
   const { logOut } = useAuth();
   const navigate = useNavigate();
+  const auth = getAuth();
 
   useEffect(() => {
     const requestInterceptor = axiosInstance.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem("access-token");
-        if (token) {
+      async (config) => {
+        const user = auth.currentUser;
+        if (user) {
+          const token = await user.getIdToken();
           config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
@@ -36,7 +39,7 @@ const useAxiosSecure = () => {
       axiosInstance.interceptors.request.eject(requestInterceptor);
       axiosInstance.interceptors.response.eject(responseInterceptor);
     };
-  }, [logOut, navigate]);
+  }, [logOut, navigate, auth]);
 
   return axiosInstance;
 };
