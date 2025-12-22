@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -16,19 +16,27 @@ import { GiBookshelf } from "react-icons/gi";
 import { NavLink, Outlet } from "react-router";
 import Logo from "../components/Logo/Logo";
 import useAuth from "../hooks/useAuth";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const DashboardLayout = () => {
-  const { logOut } = useAuth();
-
-  const handleLogOut = () => {
-    logOut()
-      .then()
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
+  const { user, logOut } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const [role, setRole] = useState("");
   const drawerToggleRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  // Fetch user role
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure.get(`/users/${user.email}/role`).then((res) => {
+        setRole(res.data.role);
+      });
+    }
+  }, [user?.email, axiosSecure]);
+
+  const handleLogOut = () => {
+    logOut().catch((error) => console.log(error.message));
+  };
 
   const closeDrawer = () => {
     if (drawerToggleRef.current && drawerToggleRef.current.checked) {
@@ -36,36 +44,62 @@ const DashboardLayout = () => {
     }
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const menuItems = [
-    { name: "My Orders", icon: <FaBoxOpen />, path: "/dashboard/my-orders" },
+  // All menu items with roles
+  const allMenuItems = [
+    {
+      name: "My Orders",
+      icon: <FaBoxOpen />,
+      path: "/dashboard/my-orders",
+      roles: ["user"],
+    },
     {
       name: "Invoices",
       icon: <FaFileInvoiceDollar />,
       path: "/dashboard/invoices",
+      roles: ["user"],
     },
-    { name: "Add Book", icon: <FaPlusSquare />, path: "/dashboard/add-books" },
-    { name: "My Books", icon: <FaBook />, path: "/dashboard/my-books" },
+    {
+      name: "Add Book",
+      icon: <FaPlusSquare />,
+      path: "/dashboard/add-books",
+      roles: ["librarian"],
+    },
+    {
+      name: "My Books",
+      icon: <FaBook />,
+      path: "/dashboard/my-books",
+      roles: ["librarian"],
+    },
     {
       name: "Manage Orders",
       icon: <FaClipboardList />,
       path: "/dashboard/manage-orders",
+      roles: ["librarian"],
     },
     {
       name: "Manage Users",
       icon: <FaUsers />,
       path: "/dashboard/manage-users",
+      roles: ["admin"],
     },
     {
       name: "Manage Books",
       icon: <GiBookshelf />,
       path: "/dashboard/manage-books",
+      roles: ["admin"],
     },
-    { name: "My Profile", icon: <FaUser />, path: "/dashboard/profile" },
+    {
+      name: "My Profile",
+      icon: <FaUser />,
+      path: "/dashboard/profile",
+      roles: ["user", "librarian", "admin"],
+    },
   ];
+
+  // Filter menu items based on role
+  const menuItems = allMenuItems.filter((item) => item.roles.includes(role));
 
   return (
     <div
@@ -92,7 +126,6 @@ const DashboardLayout = () => {
             </label>
           </div>
 
-          {/* Desktop Toggle Button */}
           <div className="flex-none hidden lg:block">
             <button
               onClick={toggleSidebar}
@@ -119,33 +152,26 @@ const DashboardLayout = () => {
           </div>
         </div>
 
-        {/* Main Content Area with Gradient */}
+        {/* Main Content */}
         <div className="p-6 md:p-10 flex-1 h-full min-h-screen bg-gradient-to-br from-base-100 via-indigo-50/30 to-blue-50/30">
           <Outlet />
         </div>
       </div>
 
-      {/* Sidebar Content */}
+      {/* Sidebar */}
       <div className="drawer-side z-50">
-        <label
-          htmlFor="dashboard-drawer"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
+        <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
         <div
           className={`menu p-4 min-h-full bg-base-100 border-r border-base-200 text-base-content flex flex-col transition-all duration-300 ease-in-out ${
             isSidebarOpen ? "w-72" : "w-20"
           }`}
         >
-          {/* Sidebar Logo */}
-          {/* Sidebar Logo */}
           {isSidebarOpen && (
             <div className="mb-8 flex justify-start pl-2 transition-all duration-300">
               <Logo className="w-32 transition-all duration-300" />
             </div>
           )}
 
-          {/* Menu Items */}
           <ul
             className={`space-y-2 flex-1 flex flex-col ${
               !isSidebarOpen ? "justify-center" : ""
@@ -180,7 +206,6 @@ const DashboardLayout = () => {
             ))}
           </ul>
 
-          {/* Logout Button (Bottom) */}
           <div className="border-t border-base-200 pt-4 mt-4 ">
             <button
               onClick={handleLogOut}
