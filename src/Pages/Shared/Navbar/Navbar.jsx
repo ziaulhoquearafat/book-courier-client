@@ -93,12 +93,13 @@ const Navbar = () => {
       </li>
     </>
   );
+
   return (
     <div className="sticky top-0 z-40">
-      <div className="navbar bg-base-100/95 backdrop-blur-sm shadow-sm border-b border-gray-200">
+      <div className="navbar bg-base-100/95 backdrop-blur-sm shadow-sm border-b border-gray-200 px-2 md:px-4">
         <div className="navbar-start">
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden px-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -122,16 +123,18 @@ const Navbar = () => {
               {links}
             </ul>
           </div>
-          <div className="btn btn-ghost text-lg lg:text-xl">
+          <div className="btn btn-ghost text-lg lg:text-xl px-2">
             <Logo></Logo>
           </div>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 gap-4">{links}</ul>
         </div>
+        
+        {/* Fixed Navbar-end Section */}
         <div className="navbar-end">
           {user ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <div className="avatar">
                 <div className="w-8 h-8 rounded-full ring-2 ring-blue-500">
                   <img
@@ -140,24 +143,24 @@ const Navbar = () => {
                   />
                 </div>
               </div>
-              <a
+              <button
                 onClick={handleLogOut}
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Log Out
-              </a>
+              </button>
             </div>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex gap-1.5 md:gap-2">
               <Link
                 to={"/login"}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Log in
               </Link>
               <Link
                 to={"/register"}
-                className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Register
               </Link>
