@@ -16,6 +16,10 @@ const SocialLogin = () => {
       const user = result.user;
       console.log("Google user:", user);
 
+      // Save Firebase ID token to localStorage
+      const idToken = await user.getIdToken();
+      localStorage.setItem("access-token", idToken);
+
       // Save or update user in DB
       const userData = {
         name: user.displayName,
@@ -26,7 +30,7 @@ const SocialLogin = () => {
       await saveOrUpdateUser(userData);
 
       navigate(location?.state || "/");
-      toast.success("Logged In Successfull");
+      toast.success("Logged In Successfully");
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);

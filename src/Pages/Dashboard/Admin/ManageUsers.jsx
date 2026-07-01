@@ -18,8 +18,7 @@ const ManageUsers = () => {
     queryKey: ["users"],
     queryFn: async () => {
       const res = await axiosSecure.get("/users");
-      // Use existing user data if available to avoid loading flicker
-      return res.data;
+      return Array.isArray(res.data) ? res.data : [];
     },
   });
 

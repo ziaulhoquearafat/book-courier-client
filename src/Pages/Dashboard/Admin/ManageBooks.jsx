@@ -17,7 +17,7 @@ const ManageBooks = () => {
     queryKey: ["all-books"],
     queryFn: async () => {
       const res = await axiosSecure.get("/all-books");
-      return res.data;
+      return Array.isArray(res.data) ? res.data : [];
     },
   });
 

@@ -16,7 +16,7 @@ const LatestBooks = () => {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/books/latest`
       );
-      return res.data;
+      return Array.isArray(res.data) ? res.data : [];
     },
   });
 

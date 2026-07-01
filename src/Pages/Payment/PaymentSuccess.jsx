@@ -1,17 +1,22 @@
-import axios from "axios";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router";
+import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
+  const { loading, user } = useAuth();
 
   useEffect(() => {
-    if (sessionId) {
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/verify-payment`, {
+    if (loading) return; // Wait until Firebase Auth loads the user state
+
+    if (sessionId && user) {
+      axiosSecure
+        .post("/verify-payment", {
           sessionId,
         })
         .then(() => {
@@ -22,7 +27,7 @@ const PaymentSuccess = () => {
           toast.error("Payment verification failed");
         });
     }
-  }, [sessionId, navigate]);
+  }, [sessionId, navigate, axiosSecure, loading, user]);
 
   return (
     <div className="text-center mt-20">

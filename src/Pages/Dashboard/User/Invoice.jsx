@@ -24,7 +24,7 @@ const Invoice = () => {
     queryKey: ["my-payments"],
     queryFn: async () => {
       const res = await axiosSecure.get("/my-payments");
-      return res.data;
+      return Array.isArray(res.data) ? res.data : [];
     },
   });
 

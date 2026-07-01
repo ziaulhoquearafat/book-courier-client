@@ -23,7 +23,7 @@ const AllBooks = () => {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/books`, {
       params: { search, sort },
     });
-    return res.data;
+    return Array.isArray(res.data) ? res.data : [];
   };
 
   const {

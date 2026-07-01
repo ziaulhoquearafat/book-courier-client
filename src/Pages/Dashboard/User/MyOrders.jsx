@@ -31,7 +31,7 @@ const MyOrders = () => {
     queryFn: async () => {
       const res = await axiosSecure.get("/my-orders");
       console.log(res.data);
-      return res.data;
+      return Array.isArray(res.data) ? res.data : [];
     },
   });
 
@@ -49,8 +49,8 @@ const MyOrders = () => {
         },
       };
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/create-checkout-session`,
+      const res = await axiosSecure.post(
+        "/create-checkout-session",
         paymentInfo
       );
 

@@ -30,7 +30,7 @@ const ManageOrders = () => {
     queryKey: ["librarian-orders"],
     queryFn: async () => {
       const res = await axiosSecure.get("/librarian-orders");
-      return res.data;
+      return Array.isArray(res.data) ? res.data : [];
     },
   });
 
