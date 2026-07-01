@@ -145,7 +145,7 @@ const Navbar = () => {
               </div>
               <button
                 onClick={handleLogOut}
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-6 md:py-2 text-[11px] sm:text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Log Out
               </button>
@@ -154,13 +154,13 @@ const Navbar = () => {
             <div className="flex gap-1.5 md:gap-2">
               <Link
                 to={"/login"}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-6 md:py-2 text-[11px] sm:text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Log in
               </Link>
               <Link
                 to={"/register"}
-                className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold px-3 py-1.5 md:px-6 md:py-2 text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-6 md:py-2 text-[11px] sm:text-sm md:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Register
               </Link>
